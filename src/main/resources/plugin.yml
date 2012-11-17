@@ -1,0 +1,34 @@
+author: eccentric_nz
+description: Random teleport plugin with multiworld support
+main: me.eccentric_nz.plugins.nonspecificodyssey.NonSpecificOdyssey
+name: Non-Specific-Odyssey
+startup: postworld
+dev-url: http://dev.bukkit.org/server-mods/non-specific-odyssey/
+version: '1.0'
+permissions:
+  nonspecificodyssey.*:
+    children:
+      nonspecificodyssey.use: true
+      nonspecificodyssey.nether: true
+      nonspecificodyssey.end: true
+    description: Allow players to random teleport to any environment.
+    defult: op
+  nonspecificodyssey.use:
+    description: Allow player to use the random teleport command
+    default: true
+  nonspecificodyssey.end:
+    description: Allow player to random teleport to THE END
+    default: op
+  nonspecificodyssey.nether:
+    description: Allow player to random teleport to the NETHER
+    default: op
+  nonspecificodyssey.bypass:
+    description: Allow player to bypass the random teleport cooldown
+    default: op
+commands:
+  randomteleport:
+    aliases: [rtp,nso]
+    description: Teleport to a random destination
+    usage: /<command> [world]
+    permission: nonspecificodyssey.use
+    permission-message: You don't have the permission <permission> to use this command

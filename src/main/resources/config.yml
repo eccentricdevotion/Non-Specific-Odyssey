@@ -1,0 +1,7 @@
+cooldown: true
+cooldown_time: 120
+no_damage: false
+no_damage_time: 20
+max: 1024
+nether: false
+end: false

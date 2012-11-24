@@ -17,14 +17,15 @@ public class NonSpecificOdyssey extends JavaPlugin {
 
         if (!getDataFolder().exists()) {
             if (!getDataFolder().mkdir()) {
-                System.err.println("[NonSpecificOdyssey] Could not create directory!");
-                System.out.println("[NonSpecificOdyssey] Requires you to manually make the NonSpecificOdyssey/ directory!");
+                System.err.println("[Non-Specific Odyssey] Could not create directory!");
+                System.out.println("[Non-Specific Odyssey] Requires you to manually make the NonSpecificOdyssey/ directory!");
             }
             getDataFolder().setWritable(true);
             getDataFolder().setExecutable(true);
         }
         commando = new NonSpecificOdysseyCommands(plugin);
         getCommand("randomteleport").setExecutor(commando);
+        getCommand("nsoadmin").setExecutor(commando);
 
         try {
             MetricsLite metrics = new MetricsLite(this);

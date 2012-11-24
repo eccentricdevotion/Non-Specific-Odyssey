@@ -18,6 +18,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
 
     private NonSpecificOdyssey plugin;
     Random rand = new Random();
+    private String plugin_name = "¤6[Non-Specific Odyssey]¤r ";
 
     public NonSpecificOdysseyCommands(NonSpecificOdyssey plugin) {
         this.plugin = plugin;
@@ -33,11 +34,11 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
         // check there is the right number of arguments
         if (cmd.getName().equalsIgnoreCase("randomteleport")) {
             if (player == null) {
-                sender.sendMessage("This command can only be run by a player!");
+                sender.sendMessage(plugin_name + "This command can only be run by a player!");
                 return true;
             }
             if (!player.hasPermission("nonspecificodyssey.use")) {
-                sender.sendMessage("You do not have permission to run this command!");
+                sender.sendMessage(plugin_name + "You do not have permission to run this command!");
                 return true;
             }
             // get system time
@@ -52,7 +53,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
             if (player.hasPermission("nonspecificodyssey.bypass") || (systime - playerTime) >= cooldownPeriod) {
                 World pworld = player.getWorld();
                 if (!player.hasPermission("nonspecificodyssey.use." + pworld.getName())) {
-                    sender.sendMessage("You do not have permission to random teleport in this world!");
+                    sender.sendMessage(plugin_name + "You do not have permission to random teleport in this world!");
                     return true;
                 }
                 Environment e = pworld.getEnvironment();
@@ -63,7 +64,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                             if (plugin.getConfig().getBoolean("nether") && player.hasPermission("nonspecificodyssey.nether")) {
                                 random = randomNetherLocation(pworld);
                             } else {
-                                player.sendMessage("You cannot random teleport to the Nether");
+                                player.sendMessage(plugin_name + "You cannot random teleport to the Nether");
                                 return true;
                             }
                             break;
@@ -71,7 +72,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                             if (plugin.getConfig().getBoolean("end") && player.hasPermission("nonspecificodyssey.end")) {
                                 random = randomTheEndLocation(pworld);
                             } else {
-                                player.sendMessage("You cannot random teleport to The End");
+                                player.sendMessage(plugin_name + "You cannot random teleport to The End");
                                 return true;
                             }
                         //break;
@@ -80,7 +81,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                             break;
                     }
                     // teleport within this world only
-                    sender.sendMessage("Teleporting...");
+                    sender.sendMessage(plugin_name + "Teleporting...");
                     movePlayer(player, random, pworld);
                     if (plugin.getConfig().getBoolean("cooldown")) {
                         plugin.rtpcooldown.put(player.getName(), systime);
@@ -91,11 +92,11 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                     // teleport to the specified world
                     World world = plugin.getServer().getWorld(args[0]);
                     if (world == null) {
-                        sender.sendMessage("Could not find the world '" + world + "'. Are you sure you typed it correctly?");
+                        sender.sendMessage(plugin_name + "Could not find the world '" + world + "'. Are you sure you typed it correctly?");
                         return true;
                     }
                     if (!player.hasPermission("nonspecificodyssey.use." + args[0])) {
-                        sender.sendMessage("You do not have permission to random teleport to this world!");
+                        sender.sendMessage(plugin_name + "You do not have permission to random teleport to this world!");
                         return true;
                     }
                     switch (world.getEnvironment()) {
@@ -103,7 +104,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                             if (plugin.getConfig().getBoolean("nether") && player.hasPermission("nonspecificodyssey.nether")) {
                                 random = randomNetherLocation(world);
                             } else {
-                                player.sendMessage("You cannot random teleport to the Nether");
+                                player.sendMessage(plugin_name + "You cannot random teleport to the Nether");
                                 return true;
                             }
                             break;
@@ -111,21 +112,51 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                             if (plugin.getConfig().getBoolean("end") && player.hasPermission("nonspecificodyssey.end")) {
                                 random = randomTheEndLocation(world);
                             } else {
-                                player.sendMessage("You cannot random teleport to The End");
+                                player.sendMessage(plugin_name + "You cannot random teleport to The End");
                                 return true;
                             }
                         default:
                             random = randomOverworldLocation(world);
                             break;
                     }
-                    sender.sendMessage("Teleporting to " + world + "...");
+                    sender.sendMessage(plugin_name + "Teleporting to " + world + "...");
                     movePlayer(player, random, world);
                     plugin.rtpcooldown.put(player.getName(), systime);
                     return true;
                 }
             } else {
-                long secs = Math.round((cooldownPeriod - (systime - playerTime))/1000);
-                sender.sendMessage("Your random teleport cooldown period still has " + secs + " seconds to go.");
+                long secs = Math.round((cooldownPeriod - (systime - playerTime)) / 1000);
+                sender.sendMessage(plugin_name + "Your random teleport cooldown period still has " + secs + " seconds to go.");
+                return true;
+            }
+        }
+        if (cmd.getName().equalsIgnoreCase("nsoadmin")) {
+            if (!player.hasPermission("nonspecificodyssey.admin")) {
+                sender.sendMessage(plugin_name + "You do not have permission to change the config!");
+                return true;
+            }
+            if (args.length < 1) {
+                sender.sendMessage(plugin_name + "Not enough command arguments!");
+                return false;
+            }
+            if (args[0].equalsIgnoreCase("cooldown") || args[0].equalsIgnoreCase("no_damage") || args[0].equalsIgnoreCase("nether") || args[0].equalsIgnoreCase("end")) {
+                String option = args[0].toLowerCase();
+                boolean bool = !plugin.getConfig().getBoolean(option);
+                plugin.getConfig().set(option, bool);
+                plugin.saveConfig();
+                sender.sendMessage(plugin_name + option + " was set to: " + bool);
+                return true;
+            }
+            if (args[0].equalsIgnoreCase("cooldown_time") || args[0].equalsIgnoreCase("no_damage_time") || args[0].equalsIgnoreCase("max")) {
+                if (args.length < 2) {
+                    sender.sendMessage(plugin_name + "Not enough command arguments!");
+                    return false;
+                }
+                String option = args[0].toLowerCase();
+                int amount = Integer.parseInt(args[1]);
+                plugin.getConfig().set(option, amount);
+                plugin.saveConfig();
+                sender.sendMessage(plugin_name + option + " was set to: " + amount);
                 return true;
             }
         }

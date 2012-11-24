@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
@@ -253,8 +254,9 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
             @Override
             public void run() {
                 thePlayer.teleport(theLocation);
+                thePlayer.getWorld().playSound(theLocation, Sound.ENDERMAN_TELEPORT, 1.0F, 1.0F);
             }
-        }, 10L);
+        }, 5L);
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
@@ -266,7 +268,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                     thePlayer.setAllowFlight(true);
                 }
             }
-        }, 5L);
+        }, 10L);
     }
 
     private int randomX() {

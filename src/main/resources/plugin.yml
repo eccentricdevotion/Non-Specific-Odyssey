@@ -4,7 +4,7 @@ main: me.eccentric_nz.plugins.nonspecificodyssey.NonSpecificOdyssey
 name: Non-Specific-Odyssey
 startup: postworld
 dev-url: http://dev.bukkit.org/server-mods/non-specific-odyssey/
-version: '1.0'
+version: '1.1'
 permissions:
   nonspecificodyssey.*:
     children:
@@ -25,6 +25,9 @@ permissions:
   nonspecificodyssey.bypass:
     description: Allow player to bypass the random teleport cooldown
     default: op
+  nonspecificodyssey.admin:
+    description: Allow player to change config options
+    default: op
 commands:
   randomteleport:
     aliases: [rtp,nso]
@@ -32,3 +35,9 @@ commands:
     usage: /<command> [world]
     permission: nonspecificodyssey.use
     permission-message: You don't have the permission <permission> to use this command
+  nsoadmin:
+    description: Change config options
+    usage: /<command> [option] OR /<command> [option] [amount]
+    permission: nonspecificodyssey.admin
+    permission-message: You don't have the permission <permission> to use this command
+

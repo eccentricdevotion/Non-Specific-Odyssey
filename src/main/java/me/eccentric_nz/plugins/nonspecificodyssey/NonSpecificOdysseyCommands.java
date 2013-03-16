@@ -2,6 +2,7 @@ package me.eccentric_nz.plugins.nonspecificodyssey;
 
 import java.util.Random;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -19,7 +20,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
 
     private NonSpecificOdyssey plugin;
     Random rand = new Random();
-    private String plugin_name = "¤6[Non-Specific Odyssey]¤r ";
+    private String plugin_name = ChatColor.GOLD + "[Non-Specific Odyssey] " + ChatColor.RESET;
 
     public NonSpecificOdysseyCommands(NonSpecificOdyssey plugin) {
         this.plugin = plugin;

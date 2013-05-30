@@ -77,7 +77,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                                 player.sendMessage(plugin_name + "You cannot random teleport to The End");
                                 return true;
                             }
-                        //break;
+                            break;
                         default:
                             random = randomOverworldLocation(pworld);
                             break;
@@ -117,6 +117,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                                 player.sendMessage(plugin_name + "You cannot random teleport to The End");
                                 return true;
                             }
+                            break;
                         default:
                             random = randomOverworldLocation(world);
                             break;
@@ -133,7 +134,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
             }
         }
         if (cmd.getName().equalsIgnoreCase("nsoadmin")) {
-            if (!player.hasPermission("nonspecificodyssey.admin")) {
+            if (!sender.hasPermission("nonspecificodyssey.admin")) {
                 sender.sendMessage(plugin_name + "You do not have permission to change the config!");
                 return true;
             }

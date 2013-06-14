@@ -5,3 +5,4 @@ no_damage_time: 20
 max: 1024
 nether: false
 end: false
+step: 10

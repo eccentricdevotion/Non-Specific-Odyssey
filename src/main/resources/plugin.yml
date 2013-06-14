@@ -4,7 +4,7 @@ main: me.eccentric_nz.plugins.nonspecificodyssey.NonSpecificOdyssey
 name: Non-Specific-Odyssey
 startup: postworld
 dev-url: http://dev.bukkit.org/server-mods/non-specific-odyssey/
-version: '1.2'
+version: '1.3'
 permissions:
   nonspecificodyssey.*:
     children:
@@ -12,7 +12,7 @@ permissions:
       nonspecificodyssey.nether: true
       nonspecificodyssey.end: true
     description: Allow players to random teleport to any environment.
-    defult: op
+    default: op
   nonspecificodyssey.use:
     description: Allow player to use the random teleport command
     default: true
@@ -28,6 +28,31 @@ permissions:
   nonspecificodyssey.admin:
     description: Allow player to change config options
     default: op
+  nonspecificodyssey.biome.*:
+    children:
+      nonspecificodyssey.biome.SWAMPLAND: true
+      nonspecificodyssey.biome.FOREST: true
+      nonspecificodyssey.biome.TAIGA: true
+      nonspecificodyssey.biome.DESERT: true
+      nonspecificodyssey.biome.PLAINS: true
+      nonspecificodyssey.biome.OCEAN: true
+      nonspecificodyssey.biome.RIVER: true
+      nonspecificodyssey.biome.EXTREME_HILLS: true
+      nonspecificodyssey.biome.FROZEN_OCEAN: true
+      nonspecificodyssey.biome.FROZEN_RIVER: true
+      nonspecificodyssey.biome.ICE_PLAINS: true
+      nonspecificodyssey.biome.ICE_MOUNTAINS: true
+      nonspecificodyssey.biome.MUSHROOM_ISLAND: true
+      nonspecificodyssey.biome.MUSHROOM_SHORE: true
+      nonspecificodyssey.biome.BEACH: true
+      nonspecificodyssey.biome.DESERT_HILLS: true
+      nonspecificodyssey.biome.FOREST_HILLS: true
+      nonspecificodyssey.biome.TAIGA_HILLS: true
+      nonspecificodyssey.biome.SMALL_MOUNTAINS: true
+      nonspecificodyssey.biome.JUNGLE: true
+      nonspecificodyssey.biome.JUNGLE_HILLS: true
+    description: Allow players to random teleport to any biome.
+    default: op
 commands:
   randomteleport:
     aliases: [rtp,nso]
@@ -35,6 +60,10 @@ commands:
     usage: /<command> [world]
     permission: nonspecificodyssey.use
     permission-message: You don't have the permission <permission> to use this command
+  biome:
+    aliases: [rtpb,nsob]
+    description: Teleport to a specific biome
+    usage: /<command> [biome|list]
   nsoadmin:
     description: Change config options
     usage: /<command> [option] OR /<command> [option] [amount]

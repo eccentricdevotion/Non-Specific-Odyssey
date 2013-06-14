@@ -26,6 +26,10 @@ public class NonSpecificOdyssey extends JavaPlugin {
         commando = new NonSpecificOdysseyCommands(plugin);
         getCommand("randomteleport").setExecutor(commando);
         getCommand("nsoadmin").setExecutor(commando);
+        getCommand("biome").setExecutor(commando);
+        if (!this.getConfig().contains("step")) {
+            this.getConfig().set("step", 10);
+        }
 
         try {
             MetricsLite metrics = new MetricsLite(this);

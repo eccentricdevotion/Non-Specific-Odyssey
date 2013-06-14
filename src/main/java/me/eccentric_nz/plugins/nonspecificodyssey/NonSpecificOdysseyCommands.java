@@ -1,5 +1,8 @@
 package me.eccentric_nz.plugins.nonspecificodyssey;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Locale;
 import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,6 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
@@ -21,6 +25,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
     private NonSpecificOdyssey plugin;
     Random rand = new Random();
     private String plugin_name = ChatColor.GOLD + "[Non-Specific Odyssey] " + ChatColor.RESET;
+    private Biome[] biomes = org.bukkit.block.Biome.values();
 
     public NonSpecificOdysseyCommands(NonSpecificOdyssey plugin) {
         this.plugin = plugin;
@@ -58,7 +63,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                     sender.sendMessage(plugin_name + "You do not have permission to random teleport in this world!");
                     return true;
                 }
-                Environment e = pworld.getEnvironment();
+                Environment east = pworld.getEnvironment();
                 Location random;
                 if (args.length == 0) {
                     switch (pworld.getEnvironment()) {
@@ -130,6 +135,46 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
             } else {
                 long secs = Math.round((cooldownPeriod - (systime - playerTime)) / 1000);
                 sender.sendMessage(plugin_name + "Your random teleport cooldown period still has " + secs + " seconds to go.");
+                return true;
+            }
+        }
+        if (cmd.getName().equalsIgnoreCase("biome")) {
+            if (args.length < 1) {
+                return false;
+            }
+            String upper = args[0].toUpperCase(Locale.ENGLISH);
+            if (upper.equals("LIST")) {
+                String b = "";
+                for (Biome bi : org.bukkit.block.Biome.values()) {
+                    if (!bi.equals(Biome.HELL) && !bi.equals(Biome.SKY)) {
+                        b += bi.toString() + ", ";
+                    }
+                }
+                b = b.substring(0, b.length() - 2);
+                sender.sendMessage("Biomes: " + b);
+                return true;
+            } else {
+                if (!sender.hasPermission("nonspecificodyssey.biome." + upper)) {
+                    sender.sendMessage(plugin_name + "You do not have permission to use biome teleports!");
+                    return true;
+                }
+                if (player == null) {
+                    sender.sendMessage(plugin_name + "This command can only be run by a player!");
+                    return true;
+                }
+                try {
+                    Biome biome = Biome.valueOf(upper);
+                    sender.sendMessage("Searching for biome, this may take some time!");
+                    Location nsob = searchBiome(player, biome);
+                    if (nsob == null) {
+                        sender.sendMessage("Could not find biome!");
+                        return true;
+                    } else {
+                        movePlayer(player, nsob, player.getLocation().getWorld());
+                    }
+                } catch (IllegalArgumentException iae) {
+                    sender.sendMessage("Biome type not valid!");
+                }
                 return true;
             }
         }
@@ -295,5 +340,63 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
         wherez = wherez - max;
 
         return wherez;
+    }
+
+    private Location searchBiome(Player p, Biome b) {
+        Location l = null;
+        int startx = p.getLocation().getBlockX();
+        int startz = p.getLocation().getBlockZ();
+        World w = p.getLocation().getWorld();
+        int limit = 30000;
+        int step = plugin.getConfig().getInt("step");
+        //int diagonal = (int) Math.round(Math.sqrt(Math.pow(step, 2) / 2D));
+        // search in a random direction
+        Integer[] directions = new Integer[]{0, 1, 2, 3};
+        Collections.shuffle(Arrays.asList(directions));
+        for (int i = 0; i < 4; i++) {
+            switch (directions[i]) {
+                case 0:
+                    // east
+                    for (int east = startx; east < limit; east += step) {
+                        Biome chkb = w.getBiome(east, startz);
+                        if (chkb.equals(b)) {
+                            p.sendMessage(plugin_name + b.toString() + " biome found in an easterly direction!");
+                            return new Location(w, east, w.getHighestBlockYAt(east, startz), startz);
+                        }
+                    }
+                    break;
+                case 1:
+                    // south
+                    for (int south = startz; south < limit; south += step) {
+                        Biome chkb = w.getBiome(startx, south);
+                        if (chkb.equals(b)) {
+                            p.sendMessage(plugin_name + b.toString() + " biome found in a southerly direction!");
+                            return new Location(w, startx, w.getHighestBlockYAt(startx, south), south);
+                        }
+                    }
+                    break;
+                case 2:
+                    // west
+                    for (int west = startx; west > -limit; west -= step) {
+                        Biome chkb = w.getBiome(west, startz);
+                        if (chkb.equals(b)) {
+                            p.sendMessage(plugin_name + b.toString() + " biome found in a westerly direction!");
+                            return new Location(w, west, w.getHighestBlockYAt(west, startz), startz);
+                        }
+                    }
+                    break;
+                case 3:
+                    // north
+                    for (int north = startz; north > -limit; north -= step) {
+                        Biome chkb = w.getBiome(startx, north);
+                        if (chkb.equals(b)) {
+                            p.sendMessage(plugin_name + b.toString() + " biome found in a northerly direction!");
+                            return new Location(w, startx, w.getHighestBlockYAt(startx, north), north);
+                        }
+                    }
+                    break;
+            }
+        }
+        return l;
     }
 }

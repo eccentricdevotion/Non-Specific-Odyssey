@@ -25,7 +25,6 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
     private NonSpecificOdyssey plugin;
     Random rand = new Random();
     private String plugin_name = ChatColor.GOLD + "[Non-Specific Odyssey] " + ChatColor.RESET;
-    private Biome[] biomes = org.bukkit.block.Biome.values();
 
     public NonSpecificOdysseyCommands(NonSpecificOdyssey plugin) {
         this.plugin = plugin;

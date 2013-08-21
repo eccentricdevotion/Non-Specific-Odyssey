@@ -265,8 +265,8 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
         while (danger == true) {
             int x = rand.nextInt(240);
             int z = rand.nextInt(240);
-            x = x - 120;
-            z = z - 120;
+            x -= 120;
+            z -= 120;
             // get the spawn point
             Location endSpawn = end.getSpawnLocation();
             int highest = end.getHighestBlockYAt(endSpawn.getBlockX() + x, endSpawn.getBlockZ() + z);
@@ -283,7 +283,10 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
     private void movePlayer(Player p, Location l, World from) {
 
         final Player thePlayer = p;
+        plugin.listener.travellers.add(p.getName());
+        l.setY(l.getY() + 0.2);
         final Location theLocation = l;
+
         final World to = theLocation.getWorld();
         final boolean allowFlight = thePlayer.getAllowFlight();
         final boolean crossWorlds = from != to;
@@ -291,10 +294,9 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
         // try loading chunk
         World world = l.getWorld();
         Chunk chunk = world.getChunkAt(l);
-        if (!world.isChunkLoaded(chunk)) {
+        while (!world.isChunkLoaded(chunk)) {
             world.loadChunk(chunk);
         }
-        //world.refreshChunk(chunk.getX(), chunk.getZ());
 
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
@@ -302,7 +304,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                 thePlayer.teleport(theLocation);
                 thePlayer.getWorld().playSound(theLocation, Sound.ENDERMAN_TELEPORT, 1.0F, 1.0F);
             }
-        }, 5L);
+        }, 10L);
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
@@ -314,7 +316,15 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                     thePlayer.setAllowFlight(true);
                 }
             }
-        }, 10L);
+        }, 15L);
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+                if (plugin.listener.travellers.contains(thePlayer.getName())) {
+                    plugin.listener.travellers.remove(thePlayer.getName());
+                }
+            }
+        }, 100L);
     }
 
     private int randomX() {
@@ -323,8 +333,8 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
         wherex = rand.nextInt(max);
 
         // add chance of negative values
-        wherex = wherex * 2;
-        wherex = wherex - max;
+        wherex *= 2;
+        wherex -= max;
 
         return wherex;
     }
@@ -335,8 +345,8 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
         wherez = rand.nextInt(max);
 
         // add chance of negative values
-        wherez = wherez * 2;
-        wherez = wherez - max;
+        wherez *= 2;
+        wherez -= max;
 
         return wherez;
     }

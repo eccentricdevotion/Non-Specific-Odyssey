@@ -9,6 +9,7 @@ public class NonSpecificOdyssey extends JavaPlugin {
     protected static NonSpecificOdyssey plugin;
     HashMap<String, Long> rtpcooldown = new HashMap<String, Long>();
     private NonSpecificOdysseyCommands commando;
+    public NonSpecificOdysseyListener listener;
 
     @Override
     public void onEnable() {
@@ -23,6 +24,8 @@ public class NonSpecificOdyssey extends JavaPlugin {
             getDataFolder().setWritable(true);
             getDataFolder().setExecutable(true);
         }
+        listener = new NonSpecificOdysseyListener();
+        this.getServer().getPluginManager().registerEvents(listener, this);
         commando = new NonSpecificOdysseyCommands(plugin);
         getCommand("randomteleport").setExecutor(commando);
         getCommand("nsoadmin").setExecutor(commando);

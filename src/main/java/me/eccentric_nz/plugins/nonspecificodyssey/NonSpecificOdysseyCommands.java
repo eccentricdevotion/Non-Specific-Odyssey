@@ -11,7 +11,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
-import org.bukkit.World.Environment;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -22,9 +21,9 @@ import org.bukkit.entity.Player;
 
 public class NonSpecificOdysseyCommands implements CommandExecutor {
 
-    private NonSpecificOdyssey plugin;
-    Random rand = new Random();
-    private String plugin_name = ChatColor.GOLD + "[Non-Specific Odyssey] " + ChatColor.RESET;
+    private final NonSpecificOdyssey plugin;
+    private final Random rand = new Random();
+    private final String plugin_name = ChatColor.GOLD + "[Non-Specific Odyssey] " + ChatColor.RESET;
 
     public NonSpecificOdysseyCommands(NonSpecificOdyssey plugin) {
         this.plugin = plugin;
@@ -62,7 +61,6 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                     sender.sendMessage(plugin_name + "You do not have permission to random teleport in this world!");
                     return true;
                 }
-                Environment east = pworld.getEnvironment();
                 Location random;
                 if (args.length == 0) {
                     switch (pworld.getEnvironment()) {
@@ -144,7 +142,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
             String upper = args[0].toUpperCase(Locale.ENGLISH);
             if (upper.equals("LIST")) {
                 String b = "";
-                for (Biome bi : org.bukkit.block.Biome.values()) {
+                for (Biome bi : Biome.values()) {
                     if (!bi.equals(Biome.HELL) && !bi.equals(Biome.SKY)) {
                         b += bi.toString() + ", ";
                     }
@@ -210,7 +208,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
         return false;
     }
 
-    private Location randomOverworldLocation(World w) {
+    public Location randomOverworldLocation(World w) {
         boolean danger = true;
         Location random = null;
         // get max_radius from config
@@ -280,7 +278,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
         return random;
     }
 
-    private void movePlayer(Player p, Location l, World from) {
+    public void movePlayer(Player p, Location l, World from) {
 
         final Player thePlayer = p;
         plugin.listener.travellers.add(p.getName());

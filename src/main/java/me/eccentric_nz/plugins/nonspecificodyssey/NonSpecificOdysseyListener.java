@@ -5,14 +5,22 @@ package me.eccentric_nz.plugins.nonspecificodyssey;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -20,7 +28,15 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
  */
 public class NonSpecificOdysseyListener implements Listener {
 
+    private final NonSpecificOdyssey plugin;
     List<String> travellers = new ArrayList<String>();
+    List<String> hasClicked = new ArrayList<String>();
+    String firstline;
+
+    public NonSpecificOdysseyListener(NonSpecificOdyssey plugin) {
+        this.plugin = plugin;
+        this.firstline = plugin.getConfig().getString("firstline");
+    }
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerSuffocate(EntityDamageByBlockEvent event) {
@@ -35,6 +51,63 @@ public class NonSpecificOdysseyListener implements Listener {
                 p.teleport(l);
                 travellers.remove(name);
             }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        Block b = event.getClickedBlock();
+        if (b != null && (b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN))) {
+            Sign sign = (Sign) b.getState();
+            String nsoline = stripColourCode(sign.getLine(0));
+            if (nsoline.equalsIgnoreCase("[" + firstline + "]")) {
+                final Player p = event.getPlayer();
+                if (p.hasPermission("nonspecificodyssey.sign")) {
+                    final String name = p.getName();
+                    if (!hasClicked.contains(name)) {
+                        hasClicked.add(name);
+                        final World w = b.getWorld();
+                        if (p.isSneaking() && p.isOp()) {
+                            b.setType(Material.AIR);
+                            w.dropItemNaturally(b.getLocation(), new ItemStack(Material.SIGN, 1));
+                            hasClicked.remove(name);
+                        } else {
+                            final Location random = plugin.getCommando().randomOverworldLocation(w);
+                            p.sendMessage(ChatColor.GOLD + "[Non-Specific Odyssey] " + ChatColor.RESET + "Standby for random teleport...");
+                            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                                @Override
+                                public void run() {
+                                    plugin.getCommando().movePlayer(p, random, w);
+                                }
+                            }, 20L);
+                            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                                @Override
+                                public void run() {
+                                    hasClicked.remove(name);
+                                }
+                            }, 60L);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onSignChange(SignChangeEvent event) {
+        Player player = event.getPlayer();
+        String nsoline = stripColourCode(event.getLine(0));
+        if (nsoline.equalsIgnoreCase("[" + firstline + "]") && !player.hasPermission("nonspecificodyssey.admin")) {
+            event.setLine(0, "");
+            player.sendMessage(ChatColor.GOLD + "[Non-Specific Odyssey] " + ChatColor.RESET + "You do not have permission to create teleport signs!");
+        }
+    }
+
+    public String stripColourCode(String s) {
+        if (s.startsWith(String.valueOf(ChatColor.COLOR_CHAR))) {
+            return s.substring(2);
+        } else {
+            return s;
         }
     }
 }

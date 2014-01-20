@@ -6,3 +6,4 @@ max: 1024
 nether: false
 end: false
 step: 10
+firstline: Random TP

@@ -24,14 +24,17 @@ public class NonSpecificOdyssey extends JavaPlugin {
             getDataFolder().setWritable(true);
             getDataFolder().setExecutable(true);
         }
-        listener = new NonSpecificOdysseyListener();
+        listener = new NonSpecificOdysseyListener(this);
         this.getServer().getPluginManager().registerEvents(listener, this);
-        commando = new NonSpecificOdysseyCommands(plugin);
+        commando = new NonSpecificOdysseyCommands(this);
         getCommand("randomteleport").setExecutor(commando);
         getCommand("nsoadmin").setExecutor(commando);
         getCommand("biome").setExecutor(commando);
         if (!this.getConfig().contains("step")) {
             this.getConfig().set("step", 10);
+        }
+        if (!this.getConfig().contains("firstline")) {
+            this.getConfig().set("firstline", "Random TP");
         }
 
         try {
@@ -45,5 +48,9 @@ public class NonSpecificOdyssey extends JavaPlugin {
     @Override
     public void onDisable() {
         this.saveConfig();
+    }
+
+    public NonSpecificOdysseyCommands getCommando() {
+        return commando;
     }
 }

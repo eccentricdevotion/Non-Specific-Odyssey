@@ -4,54 +4,96 @@ main: me.eccentric_nz.plugins.nonspecificodyssey.NonSpecificOdyssey
 name: Non-Specific-Odyssey
 startup: postworld
 dev-url: http://dev.bukkit.org/server-mods/non-specific-odyssey/
-version: '1.3.1'
+version: '1.4'
 permissions:
   nonspecificodyssey.*:
     children:
       nonspecificodyssey.use: true
       nonspecificodyssey.nether: true
       nonspecificodyssey.end: true
+      nonspecificodyssey.sign: true
     description: Allow players to random teleport to any environment.
     default: op
   nonspecificodyssey.use:
-    description: Allow player to use the random teleport command
+    description: Allow players to use the random teleport command
     default: true
   nonspecificodyssey.end:
-    description: Allow player to random teleport to THE END
+    description: Allow players to random teleport to THE END
     default: op
   nonspecificodyssey.nether:
-    description: Allow player to random teleport to the NETHER
+    description: Allow players to random teleport to the NETHER
     default: op
   nonspecificodyssey.bypass:
-    description: Allow player to bypass the random teleport cooldown
+    description: Allow players to bypass the random teleport cooldown
     default: op
   nonspecificodyssey.admin:
-    description: Allow player to change config options
+    description: Allow players to change config options
     default: op
   nonspecificodyssey.biome.*:
     children:
-      nonspecificodyssey.biome.SWAMPLAND: true
-      nonspecificodyssey.biome.FOREST: true
-      nonspecificodyssey.biome.TAIGA: true
+      nonspecificodyssey.biome.BEACH: true
+      nonspecificodyssey.biome.BIRCH_FOREST: true
+      nonspecificodyssey.biome.BIRCH_FOREST_HILLS: true
+      nonspecificodyssey.biome.BIRCH_FOREST_HILLS_MOUNTAINS: true
+      nonspecificodyssey.biome.BIRCH_FOREST_MOUNTAINS: true
+      nonspecificodyssey.biome.COLD_BEACH: true
+      nonspecificodyssey.biome.COLD_TAIGA: true
+      nonspecificodyssey.biome.COLD_TAIGA_HILLS: true
+      nonspecificodyssey.biome.COLD_TAIGA_MOUNTAINS: true
+      nonspecificodyssey.biome.DEEP_OCEAN: true
       nonspecificodyssey.biome.DESERT: true
-      nonspecificodyssey.biome.PLAINS: true
-      nonspecificodyssey.biome.OCEAN: true
-      nonspecificodyssey.biome.RIVER: true
+      nonspecificodyssey.biome.DESERT_HILLS: true
+      nonspecificodyssey.biome.DESERT_MOUNTAINS: true
       nonspecificodyssey.biome.EXTREME_HILLS: true
+      nonspecificodyssey.biome.EXTREME_HILLS_MOUNTAINS: true
+      nonspecificodyssey.biome.EXTREME_HILLS_PLUS: true
+      nonspecificodyssey.biome.EXTREME_HILLS_PLUS_MOUNTAINS: true
+      nonspecificodyssey.biome.FLOWER_FOREST: true
+      nonspecificodyssey.biome.FOREST: true
+      nonspecificodyssey.biome.FOREST_HILLS: true
       nonspecificodyssey.biome.FROZEN_OCEAN: true
       nonspecificodyssey.biome.FROZEN_RIVER: true
-      nonspecificodyssey.biome.ICE_PLAINS: true
       nonspecificodyssey.biome.ICE_MOUNTAINS: true
+      nonspecificodyssey.biome.ICE_PLAINS: true
+      nonspecificodyssey.biome.ICE_PLAINS_SPIKES: true
+      nonspecificodyssey.biome.JUNGLE: true
+      nonspecificodyssey.biome.JUNGLE_EDGE: true
+      nonspecificodyssey.biome.JUNGLE_EDGE_MOUNTAINS: true
+      nonspecificodyssey.biome.JUNGLE_HILLS: true
+      nonspecificodyssey.biome.JUNGLE_MOUNTAINS: true
+      nonspecificodyssey.biome.MEGA_SPRUCE_TAIGA: true
+      nonspecificodyssey.biome.MEGA_SPRUCE_TAIGA_HILLS: true
+      nonspecificodyssey.biome.MEGA_TAIGA: true
+      nonspecificodyssey.biome.MEGA_TAIGA_HILLS: true
+      nonspecificodyssey.biome.MESA: true
+      nonspecificodyssey.biome.MESA_BRYCE: true
+      nonspecificodyssey.biome.MESA_PLATEAU: true
+      nonspecificodyssey.biome.MESA_PLATEAU_FOREST: true
+      nonspecificodyssey.biome.MESA_PLATEAU_FOREST_MOUNTAINS: true
+      nonspecificodyssey.biome.MESA_PLATEAU_MOUNTAINS: true
       nonspecificodyssey.biome.MUSHROOM_ISLAND: true
       nonspecificodyssey.biome.MUSHROOM_SHORE: true
-      nonspecificodyssey.biome.BEACH: true
-      nonspecificodyssey.biome.DESERT_HILLS: true
-      nonspecificodyssey.biome.FOREST_HILLS: true
-      nonspecificodyssey.biome.TAIGA_HILLS: true
+      nonspecificodyssey.biome.OCEAN: true
+      nonspecificodyssey.biome.PLAINS: true
+      nonspecificodyssey.biome.RIVER: true
+      nonspecificodyssey.biome.ROOFED_FOREST: true
+      nonspecificodyssey.biome.ROOFED_FOREST_MOUNTAINS: true
+      nonspecificodyssey.biome.SAVANNA: true
+      nonspecificodyssey.biome.SAVANNA_MOUNTAINS: true
+      nonspecificodyssey.biome.SAVANNA_PLATEAU: true
+      nonspecificodyssey.biome.SAVANNA_PLATEAU_MOUNTAINS: true
       nonspecificodyssey.biome.SMALL_MOUNTAINS: true
-      nonspecificodyssey.biome.JUNGLE: true
-      nonspecificodyssey.biome.JUNGLE_HILLS: true
+      nonspecificodyssey.biome.STONE_BEACH: true
+      nonspecificodyssey.biome.SUNFLOWER_PLAINS: true
+      nonspecificodyssey.biome.SWAMPLAND: true
+      nonspecificodyssey.biome.SWAMPLAND_MOUNTAINS: true
+      nonspecificodyssey.biome.TAIGA: true
+      nonspecificodyssey.biome.TAIGA_HILLS: true
+      nonspecificodyssey.biome.TAIGA_MOUNTAINS: true
     description: Allow players to random teleport to any biome.
+    default: op
+  nonspecificodyssey.sign:
+    description: Allow players to random teleport using signs
     default: op
 commands:
   randomteleport:
@@ -64,6 +106,8 @@ commands:
     aliases: [rtpb,nsob]
     description: Teleport to a specific biome
     usage: /<command> [biome|list]
+    permission: nonspecificodyssey.use
+    permission-message: You don't have the permission <permission> to use this command
   nsoadmin:
     description: Change config options
     usage: /<command> [option] OR /<command> [option] [amount]

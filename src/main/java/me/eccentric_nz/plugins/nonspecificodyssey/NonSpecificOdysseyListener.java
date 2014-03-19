@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
@@ -72,7 +73,22 @@ public class NonSpecificOdysseyListener implements Listener {
                             w.dropItemNaturally(b.getLocation(), new ItemStack(Material.SIGN, 1));
                             hasClicked.remove(name);
                         } else {
-                            final Location random = plugin.getCommando().randomOverworldLocation(w);
+                            // check the other lines
+                            String world_line = stripColourCode(sign.getLine(2));
+                            World the_world;
+                            if (plugin.getServer().getWorld(world_line) != null) {
+                                the_world = plugin.getServer().getWorld(world_line);
+                            } else {
+                                the_world = w;
+                            }
+                            Location the_location;
+                            try {
+                                Biome biome = Biome.valueOf(stripColourCode(sign.getLine(3)).toUpperCase());
+                                the_location = plugin.getCommando().searchBiome(p, biome, the_world);
+                            } catch (IllegalArgumentException e) {
+                                the_location = plugin.getCommando().randomOverworldLocation(the_world);
+                            }
+                            final Location random = the_location;
                             p.sendMessage(ChatColor.GOLD + "[Non-Specific Odyssey] " + ChatColor.RESET + "Standby for random teleport...");
                             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                                 @Override

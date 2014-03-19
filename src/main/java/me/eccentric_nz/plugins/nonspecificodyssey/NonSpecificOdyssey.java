@@ -30,6 +30,7 @@ public class NonSpecificOdyssey extends JavaPlugin {
         getCommand("randomteleport").setExecutor(commando);
         getCommand("nsoadmin").setExecutor(commando);
         getCommand("biome").setExecutor(commando);
+        getCommand("biome").setTabCompleter(new NonSpecificOdysseyTabComplete());
         if (!this.getConfig().contains("step")) {
             this.getConfig().set("step", 10);
         }

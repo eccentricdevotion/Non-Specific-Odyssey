@@ -141,13 +141,13 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
             }
             String upper = args[0].toUpperCase(Locale.ENGLISH);
             if (upper.equals("LIST")) {
-                String b = "";
+                StringBuilder sb = new StringBuilder();
                 for (Biome bi : Biome.values()) {
                     if (!bi.equals(Biome.HELL) && !bi.equals(Biome.SKY)) {
-                        b += bi.toString() + ", ";
+                        sb.append(bi.toString()).append(", ");
                     }
                 }
-                b = b.substring(0, b.length() - 2);
+                String b = sb.toString().substring(0, sb.length() - 2);
                 sender.sendMessage("Biomes: " + b);
                 return true;
             } else {
@@ -159,10 +159,22 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                     sender.sendMessage(plugin_name + "This command can only be run by a player!");
                     return true;
                 }
+                World w = null;
+                if (args.length > 1) {
+                    plugin.getServer().getWorld(args[1]);
+                    if (w == null) {
+                        sender.sendMessage(plugin_name + "Could not find the world '" + args[1] + "'. Are you sure you typed it correctly?");
+                        return true;
+                    }
+                }
+//                if (w != null && !player.hasPermission("nonspecificodyssey.use." + w.getName())) {
+//                    sender.sendMessage(plugin_name + "You do not have permission to biome teleport in this world!");
+//                    return true;
+//                }
                 try {
                     Biome biome = Biome.valueOf(upper);
                     sender.sendMessage("Searching for biome, this may take some time!");
-                    Location nsob = searchBiome(player, biome);
+                    Location nsob = searchBiome(player, biome, w);
                     if (nsob == null) {
                         sender.sendMessage("Could not find biome!");
                         return true;
@@ -349,11 +361,13 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
         return wherez;
     }
 
-    private Location searchBiome(Player p, Biome b) {
+    public Location searchBiome(Player p, Biome b, World w) {
         Location l = null;
         int startx = p.getLocation().getBlockX();
         int startz = p.getLocation().getBlockZ();
-        World w = p.getLocation().getWorld();
+        if (w == null) {
+            w = p.getLocation().getWorld();
+        }
         int limit = 30000;
         int step = plugin.getConfig().getInt("step");
         //int diagonal = (int) Math.round(Math.sqrt(Math.pow(step, 2) / 2D));

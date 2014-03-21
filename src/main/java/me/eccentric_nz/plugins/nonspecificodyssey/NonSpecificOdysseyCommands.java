@@ -370,7 +370,6 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
         }
         int limit = 30000;
         int step = plugin.getConfig().getInt("step");
-        //int diagonal = (int) Math.round(Math.sqrt(Math.pow(step, 2) / 2D));
         // search in a random direction
         Integer[] directions = new Integer[]{0, 1, 2, 3};
         Collections.shuffle(Arrays.asList(directions));
@@ -378,6 +377,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
             switch (directions[i]) {
                 case 0:
                     // east
+                    startx += plugin.getConfig().getInt("initial_step");
                     for (int east = startx; east < limit; east += step) {
                         Biome chkb = w.getBiome(east, startz);
                         if (chkb.equals(b)) {
@@ -387,6 +387,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                     }
                     break;
                 case 1:
+                    startz += plugin.getConfig().getInt("initial_step");
                     // south
                     for (int south = startz; south < limit; south += step) {
                         Biome chkb = w.getBiome(startx, south);
@@ -398,6 +399,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                     break;
                 case 2:
                     // west
+                    startx -= plugin.getConfig().getInt("initial_step");
                     for (int west = startx; west > -limit; west -= step) {
                         Biome chkb = w.getBiome(west, startz);
                         if (chkb.equals(b)) {
@@ -407,6 +409,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                     }
                     break;
                 case 3:
+                    startz -= plugin.getConfig().getInt("initial_step");
                     // north
                     for (int north = startz; north > -limit; north -= step) {
                         Biome chkb = w.getBiome(startx, north);

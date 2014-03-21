@@ -2,9 +2,9 @@ author: eccentric_nz
 description: Random teleport plugin with multiworld support
 main: me.eccentric_nz.plugins.nonspecificodyssey.NonSpecificOdyssey
 name: Non-Specific-Odyssey
-startup: postworld
+load: POSTWORLD
 dev-url: http://dev.bukkit.org/server-mods/non-specific-odyssey/
-version: '1.4'
+version: '1.4.1'
 permissions:
   nonspecificodyssey.*:
     children:

@@ -14,29 +14,15 @@ public class NonSpecificOdyssey extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
-        this.saveDefaultConfig();
-
-        if (!getDataFolder().exists()) {
-            if (!getDataFolder().mkdir()) {
-                System.err.println("[Non-Specific Odyssey] Could not create directory!");
-                System.out.println("[Non-Specific Odyssey] Requires you to manually make the NonSpecificOdyssey/ directory!");
-            }
-            getDataFolder().setWritable(true);
-            getDataFolder().setExecutable(true);
-        }
+        saveDefaultConfig();
+        new NonSpecificOdysseyConfig(this).checkConfig();
         listener = new NonSpecificOdysseyListener(this);
-        this.getServer().getPluginManager().registerEvents(listener, this);
+        getServer().getPluginManager().registerEvents(listener, this);
         commando = new NonSpecificOdysseyCommands(this);
         getCommand("randomteleport").setExecutor(commando);
         getCommand("nsoadmin").setExecutor(commando);
         getCommand("biome").setExecutor(commando);
         getCommand("biome").setTabCompleter(new NonSpecificOdysseyTabComplete());
-        if (!this.getConfig().contains("step")) {
-            this.getConfig().set("step", 10);
-        }
-        if (!this.getConfig().contains("firstline")) {
-            this.getConfig().set("firstline", "Random TP");
-        }
 
         try {
             MetricsLite metrics = new MetricsLite(this);

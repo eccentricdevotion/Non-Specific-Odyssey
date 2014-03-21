@@ -204,7 +204,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                 sender.sendMessage(plugin_name + option + " was set to: " + bool);
                 return true;
             }
-            if (args[0].equalsIgnoreCase("cooldown_time") || args[0].equalsIgnoreCase("no_damage_time") || args[0].equalsIgnoreCase("max")) {
+            if (args[0].equalsIgnoreCase("cooldown_time") || args[0].equalsIgnoreCase("no_damage_time") || args[0].equalsIgnoreCase("max") || args[0].equalsIgnoreCase("step") || args[0].equalsIgnoreCase("initial_step")) {
                 if (args.length < 2) {
                     sender.sendMessage(plugin_name + "Not enough command arguments!");
                     return false;

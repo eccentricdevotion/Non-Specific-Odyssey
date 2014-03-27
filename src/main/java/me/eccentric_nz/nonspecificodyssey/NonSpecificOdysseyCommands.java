@@ -1,4 +1,4 @@
-package me.eccentric_nz.plugins.nonspecificodyssey;
+package me.eccentric_nz.nonspecificodyssey;
 
 import java.util.Arrays;
 import java.util.Collections;

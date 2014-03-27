@@ -1,7 +1,7 @@
 /*
  *  Copyright 2013 eccentric_nz.
  */
-package me.eccentric_nz.plugins.nonspecificodyssey;
+package me.eccentric_nz.nonspecificodyssey;
 
 import java.util.ArrayList;
 import java.util.List;

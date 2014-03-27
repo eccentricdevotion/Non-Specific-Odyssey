@@ -1,7 +1,7 @@
 /*
  *  Copyright 2014 eccentric_nz.
  */
-package me.eccentric_nz.plugins.nonspecificodyssey;
+package me.eccentric_nz.nonspecificodyssey;
 
 import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;

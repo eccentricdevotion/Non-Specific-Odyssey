@@ -1,6 +1,6 @@
 author: eccentric_nz
 description: Random teleport plugin with multiworld support
-main: me.eccentric_nz.plugins.nonspecificodyssey.NonSpecificOdyssey
+main: me.eccentric_nz.nonspecificodyssey.NonSpecificOdyssey
 name: Non-Specific-Odyssey
 load: POSTWORLD
 dev-url: http://dev.bukkit.org/server-mods/non-specific-odyssey/

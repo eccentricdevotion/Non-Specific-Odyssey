@@ -1,4 +1,4 @@
-package me.eccentric_nz.plugins.nonspecificodyssey;
+package me.eccentric_nz.nonspecificodyssey;
 
 /*
  * Copyright 2011 Tyler Blair. All rights reserved.

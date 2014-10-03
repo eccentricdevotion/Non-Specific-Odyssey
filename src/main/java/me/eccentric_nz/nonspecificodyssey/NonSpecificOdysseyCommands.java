@@ -5,10 +5,10 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.Random;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
@@ -23,7 +23,6 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
 
     private final NonSpecificOdyssey plugin;
     private final Random rand = new Random();
-    private final String plugin_name = ChatColor.GOLD + "[Non-Specific Odyssey] " + ChatColor.RESET;
 
     public NonSpecificOdysseyCommands(NonSpecificOdyssey plugin) {
         this.plugin = plugin;
@@ -39,11 +38,11 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
         // check there is the right number of arguments
         if (cmd.getName().equalsIgnoreCase("randomteleport")) {
             if (player == null) {
-                sender.sendMessage(plugin_name + "This command can only be run by a player!");
+                sender.sendMessage("[" + plugin.getPluginName() + "] " + "This command can only be run by a player!");
                 return true;
             }
             if (!player.hasPermission("nonspecificodyssey.use")) {
-                sender.sendMessage(plugin_name + "You do not have permission to run this command!");
+                sender.sendMessage("[" + plugin.getPluginName() + "] " + "You do not have permission to run this command!");
                 return true;
             }
             // get system time
@@ -58,7 +57,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
             if (player.hasPermission("nonspecificodyssey.bypass") || (systime - playerTime) >= cooldownPeriod) {
                 World pworld = player.getWorld();
                 if (!player.hasPermission("nonspecificodyssey.use." + pworld.getName())) {
-                    sender.sendMessage(plugin_name + "You do not have permission to random teleport in this world!");
+                    sender.sendMessage("[" + plugin.getPluginName() + "] " + "You do not have permission to random teleport in this world!");
                     return true;
                 }
                 Location random;
@@ -68,7 +67,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                             if (plugin.getConfig().getBoolean("nether") && player.hasPermission("nonspecificodyssey.nether")) {
                                 random = randomNetherLocation(pworld);
                             } else {
-                                player.sendMessage(plugin_name + "You cannot random teleport to the Nether");
+                                player.sendMessage("[" + plugin.getPluginName() + "] " + "You cannot random teleport to the Nether");
                                 return true;
                             }
                             break;
@@ -76,7 +75,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                             if (plugin.getConfig().getBoolean("end") && player.hasPermission("nonspecificodyssey.end")) {
                                 random = randomTheEndLocation(pworld);
                             } else {
-                                player.sendMessage(plugin_name + "You cannot random teleport to The End");
+                                player.sendMessage("[" + plugin.getPluginName() + "] " + "You cannot random teleport to The End");
                                 return true;
                             }
                             break;
@@ -85,7 +84,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                             break;
                     }
                     // teleport within this world only
-                    sender.sendMessage(plugin_name + "Teleporting...");
+                    sender.sendMessage("[" + plugin.getPluginName() + "] " + "Teleporting...");
                     movePlayer(player, random, pworld);
                     if (plugin.getConfig().getBoolean("cooldown")) {
                         plugin.rtpcooldown.put(player.getName(), systime);
@@ -96,11 +95,11 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                     // teleport to the specified world
                     World world = plugin.getServer().getWorld(args[0]);
                     if (world == null) {
-                        sender.sendMessage(plugin_name + "Could not find the world '" + world + "'. Are you sure you typed it correctly?");
+                        sender.sendMessage("[" + plugin.getPluginName() + "] " + "Could not find the world '" + world + "'. Are you sure you typed it correctly?");
                         return true;
                     }
                     if (!player.hasPermission("nonspecificodyssey.use." + args[0])) {
-                        sender.sendMessage(plugin_name + "You do not have permission to random teleport to this world!");
+                        sender.sendMessage("[" + plugin.getPluginName() + "] " + "You do not have permission to random teleport to this world!");
                         return true;
                     }
                     switch (world.getEnvironment()) {
@@ -108,7 +107,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                             if (plugin.getConfig().getBoolean("nether") && player.hasPermission("nonspecificodyssey.nether")) {
                                 random = randomNetherLocation(world);
                             } else {
-                                player.sendMessage(plugin_name + "You cannot random teleport to the Nether");
+                                player.sendMessage("[" + plugin.getPluginName() + "] " + "You cannot random teleport to the Nether");
                                 return true;
                             }
                             break;
@@ -116,7 +115,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                             if (plugin.getConfig().getBoolean("end") && player.hasPermission("nonspecificodyssey.end")) {
                                 random = randomTheEndLocation(world);
                             } else {
-                                player.sendMessage(plugin_name + "You cannot random teleport to The End");
+                                player.sendMessage("[" + plugin.getPluginName() + "] " + "You cannot random teleport to The End");
                                 return true;
                             }
                             break;
@@ -124,14 +123,14 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                             random = randomOverworldLocation(world);
                             break;
                     }
-                    sender.sendMessage(plugin_name + "Teleporting to " + world + "...");
+                    sender.sendMessage("[" + plugin.getPluginName() + "] " + "Teleporting to " + world + "...");
                     movePlayer(player, random, world);
                     plugin.rtpcooldown.put(player.getName(), systime);
                     return true;
                 }
             } else {
                 long secs = Math.round((cooldownPeriod - (systime - playerTime)) / 1000);
-                sender.sendMessage(plugin_name + "Your random teleport cooldown period still has " + secs + " seconds to go.");
+                sender.sendMessage("[" + plugin.getPluginName() + "] " + "Your random teleport cooldown period still has " + secs + " seconds to go.");
                 return true;
             }
         }
@@ -152,25 +151,21 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                 return true;
             } else {
                 if (!sender.hasPermission("nonspecificodyssey.biome." + upper)) {
-                    sender.sendMessage(plugin_name + "You do not have permission to use biome teleports!");
+                    sender.sendMessage("[" + plugin.getPluginName() + "] " + "You do not have permission to use biome teleports!");
                     return true;
                 }
                 if (player == null) {
-                    sender.sendMessage(plugin_name + "This command can only be run by a player!");
+                    sender.sendMessage("[" + plugin.getPluginName() + "] " + "This command can only be run by a player!");
                     return true;
                 }
                 World w = null;
                 if (args.length > 1) {
                     plugin.getServer().getWorld(args[1]);
                     if (w == null) {
-                        sender.sendMessage(plugin_name + "Could not find the world '" + args[1] + "'. Are you sure you typed it correctly?");
+                        sender.sendMessage("[" + plugin.getPluginName() + "] " + "Could not find the world '" + args[1] + "'. Are you sure you typed it correctly?");
                         return true;
                     }
                 }
-//                if (w != null && !player.hasPermission("nonspecificodyssey.use." + w.getName())) {
-//                    sender.sendMessage(plugin_name + "You do not have permission to biome teleport in this world!");
-//                    return true;
-//                }
                 try {
                     Biome biome = Biome.valueOf(upper);
                     sender.sendMessage("Searching for biome, this may take some time!");
@@ -189,11 +184,11 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
         }
         if (cmd.getName().equalsIgnoreCase("nsoadmin")) {
             if (!sender.hasPermission("nonspecificodyssey.admin")) {
-                sender.sendMessage(plugin_name + "You do not have permission to change the config!");
+                sender.sendMessage("[" + plugin.getPluginName() + "] " + "You do not have permission to change the config!");
                 return true;
             }
             if (args.length < 1) {
-                sender.sendMessage(plugin_name + "Not enough command arguments!");
+                sender.sendMessage("[" + plugin.getPluginName() + "] " + "Not enough command arguments!");
                 return false;
             }
             if (args[0].equalsIgnoreCase("cooldown") || args[0].equalsIgnoreCase("no_damage") || args[0].equalsIgnoreCase("nether") || args[0].equalsIgnoreCase("end")) {
@@ -201,19 +196,19 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                 boolean bool = !plugin.getConfig().getBoolean(option);
                 plugin.getConfig().set(option, bool);
                 plugin.saveConfig();
-                sender.sendMessage(plugin_name + option + " was set to: " + bool);
+                sender.sendMessage("[" + plugin.getPluginName() + "] " + option + " was set to: " + bool);
                 return true;
             }
             if (args[0].equalsIgnoreCase("cooldown_time") || args[0].equalsIgnoreCase("no_damage_time") || args[0].equalsIgnoreCase("max") || args[0].equalsIgnoreCase("step") || args[0].equalsIgnoreCase("initial_step")) {
                 if (args.length < 2) {
-                    sender.sendMessage(plugin_name + "Not enough command arguments!");
+                    sender.sendMessage("[" + plugin.getPluginName() + "] " + "Not enough command arguments!");
                     return false;
                 }
                 String option = args[0].toLowerCase();
                 int amount = Integer.parseInt(args[1]);
                 plugin.getConfig().set(option, amount);
                 plugin.saveConfig();
-                sender.sendMessage(plugin_name + option + " was set to: " + amount);
+                sender.sendMessage("[" + plugin.getPluginName() + "] " + option + " was set to: " + amount);
                 return true;
             }
         }
@@ -230,8 +225,8 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
             int y = 255;
             int highest = w.getHighestBlockYAt(x, z);
             if (highest > 3) {
-                int chkBlock = w.getBlockAt(x, highest, z).getRelative(BlockFace.DOWN).getTypeId();
-                if (chkBlock != 8 && chkBlock != 9 && chkBlock != 10 && chkBlock != 11 && chkBlock != 51) {
+                Material chkBlock = w.getBlockAt(x, highest, z).getRelative(BlockFace.DOWN).getType();
+                if (!chkBlock.equals(Material.WATER) && !chkBlock.equals(Material.STATIONARY_WATER) && !chkBlock.equals(Material.LAVA) && !chkBlock.equals(Material.STATIONARY_LAVA) && !chkBlock.equals(Material.FIRE)) {
                     random = w.getBlockAt(x, highest, z).getLocation();
                     danger = false;
                     break;
@@ -249,16 +244,16 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
             int z = randomZ();
             int y = 100;
             Block startBlock = nether.getBlockAt(x, y, z);
-            while (startBlock.getTypeId() != 0) {
+            while (!startBlock.getType().equals(Material.AIR)) {
                 startBlock = startBlock.getRelative(BlockFace.DOWN);
             }
             int air = 0;
-            while (startBlock.getTypeId() == 0 && startBlock.getLocation().getBlockY() > 30) {
+            while (startBlock.getType().equals(Material.AIR) && startBlock.getLocation().getBlockY() > 30) {
                 startBlock = startBlock.getRelative(BlockFace.DOWN);
                 air++;
             }
-            int id = startBlock.getTypeId();
-            if ((id == 87 || id == 88 || id == 89 || id == 112 || id == 113 || id == 114) && air >= 4) {
+            Material id = startBlock.getType();
+            if ((id.equals(Material.NETHERRACK) || id.equals(Material.SOUL_SAND) || id.equals(Material.GLOWSTONE) || id.equals(Material.NETHER_BRICK) || id.equals(Material.NETHER_FENCE) || id.equals(Material.NETHER_BRICK_STAIRS)) && air >= 4) {
                 random = startBlock.getLocation();
                 int randomLocY = random.getBlockY();
                 random.setY(randomLocY + 1);
@@ -381,7 +376,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                     for (int east = startx; east < limit; east += step) {
                         Biome chkb = w.getBiome(east, startz);
                         if (chkb.equals(b)) {
-                            p.sendMessage(plugin_name + b.toString() + " biome found in an easterly direction!");
+                            p.sendMessage("[" + plugin.getPluginName() + "] " + b.toString() + " biome found in an easterly direction!");
                             return new Location(w, east, w.getHighestBlockYAt(east, startz), startz);
                         }
                     }
@@ -392,7 +387,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                     for (int south = startz; south < limit; south += step) {
                         Biome chkb = w.getBiome(startx, south);
                         if (chkb.equals(b)) {
-                            p.sendMessage(plugin_name + b.toString() + " biome found in a southerly direction!");
+                            p.sendMessage("[" + plugin.getPluginName() + "] " + b.toString() + " biome found in a southerly direction!");
                             return new Location(w, startx, w.getHighestBlockYAt(startx, south), south);
                         }
                     }
@@ -403,7 +398,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                     for (int west = startx; west > -limit; west -= step) {
                         Biome chkb = w.getBiome(west, startz);
                         if (chkb.equals(b)) {
-                            p.sendMessage(plugin_name + b.toString() + " biome found in a westerly direction!");
+                            p.sendMessage("[" + plugin.getPluginName() + "] " + b.toString() + " biome found in a westerly direction!");
                             return new Location(w, west, w.getHighestBlockYAt(west, startz), startz);
                         }
                     }
@@ -414,7 +409,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                     for (int north = startz; north > -limit; north -= step) {
                         Biome chkb = w.getBiome(startx, north);
                         if (chkb.equals(b)) {
-                            p.sendMessage(plugin_name + b.toString() + " biome found in a northerly direction!");
+                            p.sendMessage("[" + plugin.getPluginName() + "] " + b.toString() + " biome found in a northerly direction!");
                             return new Location(w, startx, w.getHighestBlockYAt(startx, north), north);
                         }
                     }

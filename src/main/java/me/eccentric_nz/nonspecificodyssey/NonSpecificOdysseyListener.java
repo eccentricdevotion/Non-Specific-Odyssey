@@ -60,7 +60,7 @@ public class NonSpecificOdysseyListener implements Listener {
         Block b = event.getClickedBlock();
         if (b != null && (b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN))) {
             Sign sign = (Sign) b.getState();
-            String nsoline = stripColourCode(sign.getLine(0));
+            String nsoline = ChatColor.stripColor(sign.getLine(0));
             if (nsoline.equalsIgnoreCase("[" + firstline + "]")) {
                 final Player p = event.getPlayer();
                 if (p.hasPermission("nonspecificodyssey.sign")) {
@@ -74,7 +74,7 @@ public class NonSpecificOdysseyListener implements Listener {
                             hasClicked.remove(name);
                         } else {
                             // check the other lines
-                            String world_line = stripColourCode(sign.getLine(2));
+                            String world_line = ChatColor.stripColor(sign.getLine(2));
                             World the_world;
                             if (plugin.getServer().getWorld(world_line) != null) {
                                 the_world = plugin.getServer().getWorld(world_line);
@@ -82,26 +82,30 @@ public class NonSpecificOdysseyListener implements Listener {
                                 the_world = w;
                             }
                             Location the_location;
-                            try {
-                                Biome biome = Biome.valueOf(stripColourCode(sign.getLine(3)).toUpperCase());
+                            Biome biome = checkBiomeLine(sign.getLine(3).toUpperCase());
+                            if (biome != null) {
                                 the_location = plugin.getCommando().searchBiome(p, biome, the_world);
-                            } catch (IllegalArgumentException e) {
+                            } else {
                                 the_location = plugin.getCommando().randomOverworldLocation(the_world);
                             }
                             final Location random = the_location;
-                            p.sendMessage(ChatColor.GOLD + "[Non-Specific Odyssey] " + ChatColor.RESET + "Standby for random teleport...");
-                            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                                @Override
-                                public void run() {
-                                    plugin.getCommando().movePlayer(p, random, w);
-                                }
-                            }, 20L);
+                            if (random != null) {
+                                p.sendMessage(ChatColor.GOLD + "[" + plugin.getPluginName() + "] " + ChatColor.RESET + "Standby for random teleport...");
+                                plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        plugin.getCommando().movePlayer(p, random, w);
+                                    }
+                                }, 40L);
+                            } else {
+                                p.sendMessage(ChatColor.GOLD + "[" + plugin.getPluginName() + "] " + ChatColor.RESET + "Location finding timed out, most likely the biome couldn't be found!");
+                            }
                             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                                 @Override
                                 public void run() {
                                     hasClicked.remove(name);
                                 }
-                            }, 60L);
+                            }, 80L);
                         }
                     }
                 }
@@ -112,18 +116,27 @@ public class NonSpecificOdysseyListener implements Listener {
     @EventHandler
     public void onSignChange(SignChangeEvent event) {
         Player player = event.getPlayer();
-        String nsoline = stripColourCode(event.getLine(0));
+        String nsoline = ChatColor.stripColor(event.getLine(0));
         if (nsoline.equalsIgnoreCase("[" + firstline + "]") && !player.hasPermission("nonspecificodyssey.admin")) {
             event.setLine(0, "");
-            player.sendMessage(ChatColor.GOLD + "[Non-Specific Odyssey] " + ChatColor.RESET + "You do not have permission to create teleport signs!");
+            player.sendMessage(ChatColor.GOLD + "[" + plugin.getPluginName() + "] " + ChatColor.RESET + "You do not have permission to create teleport signs!");
         }
     }
 
-    public String stripColourCode(String s) {
-        if (s.startsWith(String.valueOf(ChatColor.COLOR_CHAR))) {
-            return s.substring(2);
-        } else {
-            return s;
+    public Biome checkBiomeLine(String str) {
+        int start = (str.startsWith(String.valueOf(ChatColor.COLOR_CHAR))) ? 2 : 0;
+        int end = (str.startsWith(String.valueOf(ChatColor.COLOR_CHAR))) ? 12 : 15;
+        for (Biome b : Biome.values()) {
+            if (b.toString().length() > 15) {
+                if (b.toString().substring(0, end).equals(str.substring(start))) {
+                    return b;
+                }
+            }
+        }
+        try {
+            return Biome.valueOf(str);
+        } catch (IllegalArgumentException e) {
+            return null;
         }
     }
 }

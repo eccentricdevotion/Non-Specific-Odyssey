@@ -1,6 +1,5 @@
 package me.eccentric_nz.nonspecificodyssey;
 
-import java.io.IOException;
 import java.util.HashMap;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -10,6 +9,7 @@ public class NonSpecificOdyssey extends JavaPlugin {
     HashMap<String, Long> rtpcooldown = new HashMap<String, Long>();
     private NonSpecificOdysseyCommands commando;
     public NonSpecificOdysseyListener listener;
+    private String pluginName;
 
     @Override
     public void onEnable() {
@@ -23,21 +23,22 @@ public class NonSpecificOdyssey extends JavaPlugin {
         getCommand("nsoadmin").setExecutor(commando);
         getCommand("biome").setExecutor(commando);
         getCommand("biome").setTabCompleter(new NonSpecificOdysseyTabComplete());
-
-        try {
-            MetricsLite metrics = new MetricsLite(this);
-            metrics.start();
-        } catch (IOException e) {
-            // Failed to submit the stats :-(
-        }
+        pluginName = getConfig().getString("firstline");
     }
 
     @Override
     public void onDisable() {
-        this.saveConfig();
     }
 
     public NonSpecificOdysseyCommands getCommando() {
         return commando;
+    }
+
+    public String getPluginName() {
+        return pluginName;
+    }
+
+    public void debug(Object o) {
+        getServer().getConsoleSender().sendMessage("[" + pluginName + "] Debug: " + o);
     }
 }

@@ -2,8 +2,10 @@ package me.eccentric_nz.nonspecificodyssey;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Random;
+import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.GameMode;
@@ -23,6 +25,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
 
     private final NonSpecificOdyssey plugin;
     private final Random rand = new Random();
+    private final HashMap<String, Long> rtpcooldown = new HashMap<String, Long>();
 
     public NonSpecificOdysseyCommands(NonSpecificOdyssey plugin) {
         this.plugin = plugin;
@@ -49,8 +52,8 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
             long cooldownPeriod = (long) plugin.getConfig().getInt("cooldown_time") * 1000;
             long systime = System.currentTimeMillis();
             long playerTime;
-            if (plugin.rtpcooldown.containsKey(player.getName())) {
-                playerTime = plugin.rtpcooldown.get(player.getName());
+            if (rtpcooldown.containsKey(player.getName())) {
+                playerTime = rtpcooldown.get(player.getName());
             } else {
                 playerTime = systime - (cooldownPeriod + 1);
             }
@@ -87,7 +90,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                     sender.sendMessage("[" + plugin.getPluginName() + "] " + "Teleporting...");
                     movePlayer(player, random, pworld);
                     if (plugin.getConfig().getBoolean("cooldown")) {
-                        plugin.rtpcooldown.put(player.getName(), systime);
+                        rtpcooldown.put(player.getName(), systime);
                     }
                     return true;
                 }
@@ -125,7 +128,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                     }
                     sender.sendMessage("[" + plugin.getPluginName() + "] " + "Teleporting to " + world + "...");
                     movePlayer(player, random, world);
-                    plugin.rtpcooldown.put(player.getName(), systime);
+                    rtpcooldown.put(player.getName(), systime);
                     return true;
                 }
             } else {
@@ -285,15 +288,15 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
         return random;
     }
 
-    public void movePlayer(Player p, Location l, World from) {
+    public void movePlayer(final Player p, Location l, World from) {
 
-        final Player thePlayer = p;
-        plugin.listener.travellers.add(p.getName());
+        final UUID uuid = p.getUniqueId();
+        plugin.getListener().getTravellers().add(uuid);
         l.setY(l.getY() + 0.2);
         final Location theLocation = l;
 
         final World to = theLocation.getWorld();
-        final boolean allowFlight = thePlayer.getAllowFlight();
+        final boolean allowFlight = p.getAllowFlight();
         final boolean crossWorlds = from != to;
 
         // try loading chunk
@@ -306,27 +309,27 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
-                thePlayer.teleport(theLocation);
-                thePlayer.getWorld().playSound(theLocation, Sound.ENDERMAN_TELEPORT, 1.0F, 1.0F);
+                p.teleport(theLocation);
+                p.getWorld().playSound(theLocation, Sound.ENDERMAN_TELEPORT, 1.0F, 1.0F);
             }
         }, 10L);
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
-                thePlayer.teleport(theLocation);
+                p.teleport(theLocation);
                 if (plugin.getConfig().getBoolean("no_damage")) {
-                    thePlayer.setNoDamageTicks(plugin.getConfig().getInt("no_damage_time") * 20);
+                    p.setNoDamageTicks(plugin.getConfig().getInt("no_damage_time") * 20);
                 }
-                if (thePlayer.getGameMode() == GameMode.CREATIVE || (allowFlight && crossWorlds)) {
-                    thePlayer.setAllowFlight(true);
+                if (p.getGameMode() == GameMode.CREATIVE || (allowFlight && crossWorlds)) {
+                    p.setAllowFlight(true);
                 }
             }
         }, 15L);
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
-                if (plugin.listener.travellers.contains(thePlayer.getName())) {
-                    plugin.listener.travellers.remove(thePlayer.getName());
+                if (plugin.getListener().getTravellers().contains(uuid)) {
+                    plugin.getListener().getTravellers().remove(uuid);
                 }
             }
         }, 100L);

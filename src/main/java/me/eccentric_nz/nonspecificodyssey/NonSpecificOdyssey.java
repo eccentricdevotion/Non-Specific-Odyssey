@@ -1,14 +1,12 @@
 package me.eccentric_nz.nonspecificodyssey;
 
-import java.util.HashMap;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class NonSpecificOdyssey extends JavaPlugin {
 
     protected static NonSpecificOdyssey plugin;
-    HashMap<String, Long> rtpcooldown = new HashMap<String, Long>();
     private NonSpecificOdysseyCommands commando;
-    public NonSpecificOdysseyListener listener;
+    private NonSpecificOdysseyListener listener;
     private String pluginName;
 
     @Override
@@ -40,5 +38,9 @@ public class NonSpecificOdyssey extends JavaPlugin {
 
     public void debug(Object o) {
         getServer().getConsoleSender().sendMessage("[" + pluginName + "] Debug: " + o);
+    }
+
+    public NonSpecificOdysseyListener getListener() {
+        return listener;
     }
 }

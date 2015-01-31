@@ -2,13 +2,17 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.eccen.plugins.nonspecificodyssey</groupId>
     <artifactId>NonSpecificOdyssey</artifactId>
-    <version>1.4.2</version>
+    <version>1.4.3</version>
     <name>Non-Specific-Odyssey</name>
     <url>http://dev.bukkit.org/server-mods/non-specific-odyssey/</url>
     <repositories>
         <repository>
-            <id>bukkit-repo</id>
-            <url>http://repo.bukkit.org/content/groups/public</url>
+            <id>macgeek</id>
+            <url>http://tardisjenkins.duckdns.org:8888</url>
+        </repository>
+        <repository>
+            <id>Bromley Massive</id>
+            <url>http://tardisjenkins.duckdns.org:8080/plugin/repository/everything/</url>
         </repository>
     </repositories>
     <build>
@@ -38,7 +42,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.7.10-R0.1-SNAPSHOT</version>
+            <version>1.8-R0.1-SNAPSHOT</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>

@@ -4,7 +4,9 @@
 package me.eccentric_nz.nonspecificodyssey;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,6 +23,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -30,8 +33,9 @@ import org.bukkit.inventory.ItemStack;
 public class NonSpecificOdysseyListener implements Listener {
 
     private final NonSpecificOdyssey plugin;
-    List<String> travellers = new ArrayList<String>();
-    List<String> hasClicked = new ArrayList<String>();
+    private final List<UUID> travellers = new ArrayList<UUID>();
+    private final List<String> hasClicked = new ArrayList<String>();
+    private final HashMap<UUID, NonSpecificOdysseyMoveSession> moveSessions = new HashMap<UUID, NonSpecificOdysseyMoveSession>();
     String firstline;
 
     public NonSpecificOdysseyListener(NonSpecificOdyssey plugin) {
@@ -44,14 +48,35 @@ public class NonSpecificOdysseyListener implements Listener {
         Entity e = event.getEntity();
         if (e instanceof Player && event.getCause().equals(DamageCause.SUFFOCATION)) {
             Player p = (Player) e;
-            String name = p.getName();
-            if (travellers.contains(name)) {
+            UUID uuid = p.getUniqueId();
+            if (travellers.contains(uuid)) {
                 Location l = p.getLocation();
                 double y = l.getWorld().getHighestBlockYAt(l);
                 l.setY(y);
                 p.teleport(l);
-                travellers.remove(name);
+                //suffocators.remove(uuid);
             }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerMove(PlayerMoveEvent event) {
+        if (!travellers.contains(event.getPlayer().getUniqueId())) {
+            return;
+        }
+        Player p = event.getPlayer();
+        Location loc = p.getLocation(); // Grab Location
+        /**
+         * Copyright (c) 2011, The Multiverse Team All rights reserved. Check
+         * the Player has actually moved a block to prevent unneeded
+         * calculations... This is to prevent huge performance drops on high
+         * player count servers.
+         */
+        NonSpecificOdysseyMoveSession tms = getNonSpecificOdysseyMoveSession(p);
+        tms.setStaleLocation(loc);
+        // If the location is stale, ie: the player isn't actually moving xyz coords, they're looking around
+        if (!tms.isStaleLocation()) {
+            event.setCancelled(true);
         }
     }
 
@@ -138,5 +163,18 @@ public class NonSpecificOdysseyListener implements Listener {
         } catch (IllegalArgumentException e) {
             return null;
         }
+    }
+
+    public List<UUID> getTravellers() {
+        return travellers;
+    }
+
+    private NonSpecificOdysseyMoveSession getNonSpecificOdysseyMoveSession(Player p) {
+        if (this.moveSessions.containsKey(p.getUniqueId())) {
+            return this.moveSessions.get(p.getUniqueId());
+        }
+        NonSpecificOdysseyMoveSession session = new NonSpecificOdysseyMoveSession(p);
+        this.moveSessions.put(p.getUniqueId(), session);
+        return session;
     }
 }

@@ -4,7 +4,7 @@ main: me.eccentric_nz.nonspecificodyssey.NonSpecificOdyssey
 name: Non-Specific-Odyssey
 load: POSTWORLD
 dev-url: http://dev.bukkit.org/server-mods/non-specific-odyssey/
-version: '1.4.2'
+version: '1.4.3'
 permissions:
   nonspecificodyssey.*:
     children:

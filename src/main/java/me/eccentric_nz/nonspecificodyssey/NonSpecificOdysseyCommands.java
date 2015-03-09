@@ -98,7 +98,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                     // teleport to the specified world
                     World world = plugin.getServer().getWorld(args[0]);
                     if (world == null) {
-                        sender.sendMessage("[" + plugin.getPluginName() + "] " + "Could not find the world '" + world + "'. Are you sure you typed it correctly?");
+                        sender.sendMessage("[" + plugin.getPluginName() + "] " + "Could not find the world '" + args[0] + "'. Are you sure you typed it correctly?");
                         return true;
                     }
                     if (!player.hasPermission("nonspecificodyssey.use." + args[0])) {
@@ -126,7 +126,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                             random = randomOverworldLocation(world);
                             break;
                     }
-                    sender.sendMessage("[" + plugin.getPluginName() + "] " + "Teleporting to " + world + "...");
+                    sender.sendMessage("[" + plugin.getPluginName() + "] " + "Teleporting to " + world.getName() + "...");
                     movePlayer(player, random, world);
                     rtpcooldown.put(player.getName(), systime);
                     return true;

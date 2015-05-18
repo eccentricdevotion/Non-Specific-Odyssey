@@ -70,7 +70,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                             if (plugin.getConfig().getBoolean("nether") && player.hasPermission("nonspecificodyssey.nether")) {
                                 random = randomNetherLocation(pworld);
                             } else {
-                                player.sendMessage("[" + plugin.getPluginName() + "] " + "You cannot random teleport to the Nether");
+                                player.sendMessage("[" + plugin.getPluginName() + "] " + "You cannot random teleport in the Nether");
                                 return true;
                             }
                             break;
@@ -78,7 +78,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                             if (plugin.getConfig().getBoolean("end") && player.hasPermission("nonspecificodyssey.end")) {
                                 random = randomTheEndLocation(pworld);
                             } else {
-                                player.sendMessage("[" + plugin.getPluginName() + "] " + "You cannot random teleport to The End");
+                                player.sendMessage("[" + plugin.getPluginName() + "] " + "You cannot random teleport in The End");
                                 return true;
                             }
                             break;

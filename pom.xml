@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.eccen.plugins.nonspecificodyssey</groupId>
     <artifactId>NonSpecificOdyssey</artifactId>
-    <version>1.4.4</version>
+    <version>1.4.5</version>
     <name>Non-Specific-Odyssey</name>
     <url>http://dev.bukkit.org/server-mods/non-specific-odyssey/</url>
     <repositories>
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.8.3-R0.1-SNAPSHOT</version>
+            <version>1.9-R0.1-SNAPSHOT</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>

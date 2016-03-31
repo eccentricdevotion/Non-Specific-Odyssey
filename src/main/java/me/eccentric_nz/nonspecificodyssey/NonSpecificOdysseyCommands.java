@@ -310,7 +310,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
             @Override
             public void run() {
                 p.teleport(theLocation);
-                p.getWorld().playSound(theLocation, Sound.ENDERMAN_TELEPORT, 1.0F, 1.0F);
+                p.getWorld().playSound(theLocation, Sound.ENTITY_ENDERMEN_TELEPORT, 1.0F, 1.0F);
             }
         }, 10L);
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {

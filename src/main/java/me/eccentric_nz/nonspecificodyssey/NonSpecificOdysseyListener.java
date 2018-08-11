@@ -3,10 +3,6 @@
  */
 package me.eccentric_nz.nonspecificodyssey;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -26,21 +22,25 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+
 /**
- *
  * @author eccentric_nz
  */
 public class NonSpecificOdysseyListener implements Listener {
 
     private final NonSpecificOdyssey plugin;
-    private final List<UUID> travellers = new ArrayList<UUID>();
-    private final List<String> hasClicked = new ArrayList<String>();
-    private final HashMap<UUID, NonSpecificOdysseyMoveSession> moveSessions = new HashMap<UUID, NonSpecificOdysseyMoveSession>();
+    private final List<UUID> travellers = new ArrayList<>();
+    private final List<String> hasClicked = new ArrayList<>();
+    private final HashMap<UUID, NonSpecificOdysseyMoveSession> moveSessions = new HashMap<>();
     String firstline;
 
     public NonSpecificOdysseyListener(NonSpecificOdyssey plugin) {
         this.plugin = plugin;
-        this.firstline = plugin.getConfig().getString("firstline");
+        firstline = plugin.getConfig().getString("firstline");
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -83,16 +83,16 @@ public class NonSpecificOdysseyListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
         Block b = event.getClickedBlock();
-        if (b != null && (b.getType().equals(Material.SIGN_POST) || b.getType().equals(Material.WALL_SIGN))) {
+        if (b != null && (b.getType().equals(Material.SIGN) || b.getType().equals(Material.WALL_SIGN))) {
             Sign sign = (Sign) b.getState();
             String nsoline = ChatColor.stripColor(sign.getLine(0));
             if (nsoline.equalsIgnoreCase("[" + firstline + "]")) {
-                final Player p = event.getPlayer();
+                Player p = event.getPlayer();
                 if (p.hasPermission("nonspecificodyssey.sign")) {
-                    final String name = p.getName();
+                    String name = p.getName();
                     if (!hasClicked.contains(name)) {
                         hasClicked.add(name);
-                        final World w = b.getWorld();
+                        World w = b.getWorld();
                         if (p.isSneaking() && p.isOp()) {
                             b.setType(Material.AIR);
                             w.dropItemNaturally(b.getLocation(), new ItemStack(Material.SIGN, 1));
@@ -113,23 +113,17 @@ public class NonSpecificOdysseyListener implements Listener {
                             } else {
                                 the_location = plugin.getCommando().randomOverworldLocation(the_world);
                             }
-                            final Location random = the_location;
+                            Location random = the_location;
                             if (random != null) {
                                 p.sendMessage(ChatColor.GOLD + "[" + plugin.getPluginName() + "] " + ChatColor.RESET + "Standby for random teleport...");
-                                plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        plugin.getCommando().movePlayer(p, random, w);
-                                    }
+                                plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                                    plugin.getCommando().movePlayer(p, random, w);
                                 }, 40L);
                             } else {
                                 p.sendMessage(ChatColor.GOLD + "[" + plugin.getPluginName() + "] " + ChatColor.RESET + "Location finding timed out, most likely the biome couldn't be found!");
                             }
-                            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                                @Override
-                                public void run() {
-                                    hasClicked.remove(name);
-                                }
+                            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                                hasClicked.remove(name);
                             }, 80L);
                         }
                     }
@@ -170,11 +164,11 @@ public class NonSpecificOdysseyListener implements Listener {
     }
 
     private NonSpecificOdysseyMoveSession getNonSpecificOdysseyMoveSession(Player p) {
-        if (this.moveSessions.containsKey(p.getUniqueId())) {
-            return this.moveSessions.get(p.getUniqueId());
+        if (moveSessions.containsKey(p.getUniqueId())) {
+            return moveSessions.get(p.getUniqueId());
         }
         NonSpecificOdysseyMoveSession session = new NonSpecificOdysseyMoveSession(p);
-        this.moveSessions.put(p.getUniqueId(), session);
+        moveSessions.put(p.getUniqueId(), session);
         return session;
     }
 }

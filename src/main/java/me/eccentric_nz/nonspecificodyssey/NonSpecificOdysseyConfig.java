@@ -1,24 +1,25 @@
 package me.eccentric_nz.nonspecificodyssey;
 
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 public class NonSpecificOdysseyConfig {
 
     private final NonSpecificOdyssey plugin;
+    HashMap<String, String> strOptions = new HashMap<>();
+    HashMap<String, Integer> intOptions = new HashMap<>();
+    HashMap<String, Boolean> boolOptions = new HashMap<>();
     private FileConfiguration config = null;
     private File configFile = null;
-    HashMap<String, String> strOptions = new HashMap<String, String>();
-    HashMap<String, Integer> intOptions = new HashMap<String, Integer>();
-    HashMap<String, Boolean> boolOptions = new HashMap<String, Boolean>();
 
     public NonSpecificOdysseyConfig(NonSpecificOdyssey plugin) {
         this.plugin = plugin;
-        this.configFile = new File(plugin.getDataFolder(), "config.yml");
-        this.config = YamlConfiguration.loadConfiguration(configFile);
+        configFile = new File(plugin.getDataFolder(), "config.yml");
+        config = YamlConfiguration.loadConfiguration(configFile);
         // boolean
         boolOptions.put("cooldown", true);
         boolOptions.put("no_damage", false);

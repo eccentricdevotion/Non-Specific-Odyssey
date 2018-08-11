@@ -4,10 +4,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class NonSpecificOdyssey extends JavaPlugin {
 
-    protected static NonSpecificOdyssey plugin;
+    public static NonSpecificOdyssey plugin;
     private NonSpecificOdysseyCommands commando;
     private NonSpecificOdysseyListener listener;
     private String pluginName;
+
+    @Override
+    public void onDisable() {
+    }
 
     @Override
     public void onEnable() {
@@ -22,10 +26,6 @@ public class NonSpecificOdyssey extends JavaPlugin {
         getCommand("biome").setExecutor(commando);
         getCommand("biome").setTabCompleter(new NonSpecificOdysseyTabComplete());
         pluginName = getConfig().getString("firstline");
-    }
-
-    @Override
-    public void onDisable() {
     }
 
     public NonSpecificOdysseyCommands getCommando() {

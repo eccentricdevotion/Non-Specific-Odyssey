@@ -1,18 +1,6 @@
 package me.eccentric_nz.nonspecificodyssey;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Random;
-import java.util.UUID;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -21,11 +9,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.*;
+
 public class NonSpecificOdysseyCommands implements CommandExecutor {
 
     private final NonSpecificOdyssey plugin;
     private final Random rand = new Random();
-    private final HashMap<String, Long> rtpcooldown = new HashMap<String, Long>();
+    private final HashMap<String, Long> rtpcooldown = new HashMap<>();
+    private final List<Biome> NOT_NORMAL = Arrays.asList(Biome.NETHER, Biome.END_BARRENS, Biome.END_HIGHLANDS, Biome.END_MIDLANDS, Biome.THE_END, Biome.SMALL_END_ISLANDS);
 
     public NonSpecificOdysseyCommands(NonSpecificOdyssey plugin) {
         this.plugin = plugin;
@@ -145,7 +136,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
             if (upper.equals("LIST")) {
                 StringBuilder sb = new StringBuilder();
                 for (Biome bi : Biome.values()) {
-                    if (!bi.equals(Biome.HELL) && !bi.equals(Biome.SKY)) {
+                    if (!NOT_NORMAL.contains(bi)) {
                         sb.append(bi.toString()).append(", ");
                     }
                 }
@@ -229,7 +220,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
             int highest = w.getHighestBlockYAt(x, z);
             if (highest > 3) {
                 Material chkBlock = w.getBlockAt(x, highest, z).getRelative(BlockFace.DOWN).getType();
-                if (!chkBlock.equals(Material.WATER) && !chkBlock.equals(Material.STATIONARY_WATER) && !chkBlock.equals(Material.LAVA) && !chkBlock.equals(Material.STATIONARY_LAVA) && !chkBlock.equals(Material.FIRE)) {
+                if (!chkBlock.equals(Material.WATER) && !chkBlock.equals(Material.LAVA) && !chkBlock.equals(Material.FIRE)) {
                     random = w.getBlockAt(x, highest, z).getLocation();
                     danger = false;
                     break;
@@ -256,7 +247,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                 air++;
             }
             Material id = startBlock.getType();
-            if ((id.equals(Material.NETHERRACK) || id.equals(Material.SOUL_SAND) || id.equals(Material.GLOWSTONE) || id.equals(Material.NETHER_BRICK) || id.equals(Material.NETHER_FENCE) || id.equals(Material.NETHER_BRICK_STAIRS)) && air >= 4) {
+            if ((id.equals(Material.NETHERRACK) || id.equals(Material.SOUL_SAND) || id.equals(Material.GLOWSTONE) || id.equals(Material.NETHER_BRICK) || id.equals(Material.NETHER_BRICK_FENCE) || id.equals(Material.NETHER_BRICK_STAIRS)) && air >= 4) {
                 random = startBlock.getLocation();
                 int randomLocY = random.getBlockY();
                 random.setY(randomLocY + 1);
@@ -288,16 +279,16 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
         return random;
     }
 
-    public void movePlayer(final Player p, Location l, World from) {
+    public void movePlayer(Player p, Location l, World from) {
 
-        final UUID uuid = p.getUniqueId();
+        UUID uuid = p.getUniqueId();
         plugin.getListener().getTravellers().add(uuid);
         l.setY(l.getY() + 0.2);
-        final Location theLocation = l;
+        Location theLocation = l;
 
-        final World to = theLocation.getWorld();
-        final boolean allowFlight = p.getAllowFlight();
-        final boolean crossWorlds = from != to;
+        World to = theLocation.getWorld();
+        boolean allowFlight = p.getAllowFlight();
+        boolean crossWorlds = from != to;
 
         // try loading chunk
         World world = l.getWorld();
@@ -306,31 +297,22 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
             world.loadChunk(chunk);
         }
 
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                p.teleport(theLocation);
-                p.getWorld().playSound(theLocation, Sound.ENTITY_ENDERMEN_TELEPORT, 1.0F, 1.0F);
-            }
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+            p.teleport(theLocation);
+            p.getWorld().playSound(theLocation, Sound.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0F);
         }, 10L);
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                p.teleport(theLocation);
-                if (plugin.getConfig().getBoolean("no_damage")) {
-                    p.setNoDamageTicks(plugin.getConfig().getInt("no_damage_time") * 20);
-                }
-                if (p.getGameMode() == GameMode.CREATIVE || (allowFlight && crossWorlds)) {
-                    p.setAllowFlight(true);
-                }
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+            p.teleport(theLocation);
+            if (plugin.getConfig().getBoolean("no_damage")) {
+                p.setNoDamageTicks(plugin.getConfig().getInt("no_damage_time") * 20);
+            }
+            if (p.getGameMode() == GameMode.CREATIVE || (allowFlight && crossWorlds)) {
+                p.setAllowFlight(true);
             }
         }, 15L);
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                if (plugin.getListener().getTravellers().contains(uuid)) {
-                    plugin.getListener().getTravellers().remove(uuid);
-                }
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+            if (plugin.getListener().getTravellers().contains(uuid)) {
+                plugin.getListener().getTravellers().remove(uuid);
             }
         }, 100L);
     }

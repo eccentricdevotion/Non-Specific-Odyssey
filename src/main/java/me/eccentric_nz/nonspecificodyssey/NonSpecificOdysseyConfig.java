@@ -13,8 +13,8 @@ public class NonSpecificOdysseyConfig {
     HashMap<String, String> strOptions = new HashMap<>();
     HashMap<String, Integer> intOptions = new HashMap<>();
     HashMap<String, Boolean> boolOptions = new HashMap<>();
-    private FileConfiguration config = null;
-    private File configFile = null;
+    private final FileConfiguration config;
+    private final File configFile;
 
     public NonSpecificOdysseyConfig(NonSpecificOdyssey plugin) {
         this.plugin = plugin;

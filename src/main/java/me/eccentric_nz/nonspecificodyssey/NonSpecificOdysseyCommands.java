@@ -251,7 +251,6 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                 random = startBlock.getLocation();
                 int randomLocY = random.getBlockY();
                 random.setY(randomLocY + 1);
-                danger = false;
                 break;
             }
         }
@@ -272,7 +271,6 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
             if (highest > 40) {
                 Block currentBlock = end.getBlockAt(x, highest, z);
                 random = currentBlock.getLocation();
-                danger = false;
                 break;
             }
         }

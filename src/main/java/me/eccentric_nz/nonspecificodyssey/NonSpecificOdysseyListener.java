@@ -3,10 +3,7 @@
  */
 package me.eccentric_nz.nonspecificodyssey;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -83,7 +80,7 @@ public class NonSpecificOdysseyListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
         Block b = event.getClickedBlock();
-        if (b != null && (b.getType().equals(Material.SIGN) || b.getType().equals(Material.WALL_SIGN))) {
+        if (b != null && Tag.SIGNS.isTagged(b.getType())) {
             Sign sign = (Sign) b.getState();
             String nsoline = ChatColor.stripColor(sign.getLine(0));
             if (nsoline.equalsIgnoreCase("[" + firstline + "]")) {
@@ -95,7 +92,7 @@ public class NonSpecificOdysseyListener implements Listener {
                         World w = b.getWorld();
                         if (p.isSneaking() && p.isOp()) {
                             b.setType(Material.AIR);
-                            w.dropItemNaturally(b.getLocation(), new ItemStack(Material.SIGN, 1));
+                            w.dropItemNaturally(b.getLocation(), new ItemStack(Material.OAK_SIGN, 1));
                             hasClicked.remove(name);
                         } else {
                             // check the other lines

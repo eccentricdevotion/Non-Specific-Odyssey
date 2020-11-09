@@ -16,7 +16,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
     private final NonSpecificOdyssey plugin;
     private final Random rand = new Random();
     private final HashMap<String, Long> rtpcooldown = new HashMap<>();
-    private final List<Biome> NOT_NORMAL = Arrays.asList(Biome.NETHER, Biome.END_BARRENS, Biome.END_HIGHLANDS, Biome.END_MIDLANDS, Biome.THE_END, Biome.SMALL_END_ISLANDS);
+    private final List<Biome> NOT_NORMAL = Arrays.asList(Biome.NETHER_WASTES, Biome.CRIMSON_FOREST, Biome.WARPED_FOREST, Biome.THE_VOID, Biome.BASALT_DELTAS, Biome.SOUL_SAND_VALLEY, Biome.END_BARRENS, Biome.END_HIGHLANDS, Biome.END_MIDLANDS, Biome.THE_END, Biome.SMALL_END_ISLANDS);
 
     public NonSpecificOdysseyCommands(NonSpecificOdyssey plugin) {
         this.plugin = plugin;

@@ -39,12 +39,12 @@ public class NonSpecificOdysseyMoveSession {
         setLocation(p.getLocation());
     }
 
-    public void setStaleLocation(boolean active) {
-        staleLocation = active;
-    }
-
     public boolean isStaleLocation() {
         return staleLocation;
+    }
+
+    public void setStaleLocation(boolean active) {
+        staleLocation = active;
     }
 
     public void setStaleLocation(Location loc) {

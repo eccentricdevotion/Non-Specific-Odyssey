@@ -1,6 +1,7 @@
-Non-Specific Odyssey
-======
+## Non-Specific Odyssey
+
 Non-Specific Odyssey is a random teleport CraftBukkit plugin that always gives you good locations!
+
 * never teleport into water or lava
 * never teleport inside blocks or caves
 * permissions based multi-world support

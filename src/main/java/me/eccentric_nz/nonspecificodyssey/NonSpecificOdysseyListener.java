@@ -42,15 +42,14 @@ public class NonSpecificOdysseyListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerSuffocate(EntityDamageByBlockEvent event) {
-        Entity e = event.getEntity();
-        if (e instanceof Player && event.getCause().equals(DamageCause.SUFFOCATION)) {
-            Player p = (Player) e;
-            UUID uuid = p.getUniqueId();
+        Entity entity = event.getEntity();
+        if (entity instanceof Player player && event.getCause().equals(DamageCause.SUFFOCATION)) {
+            UUID uuid = player.getUniqueId();
             if (travellers.contains(uuid)) {
-                Location l = p.getLocation();
-                double y = l.getWorld().getHighestBlockYAt(l);
-                l.setY(y);
-                p.teleport(l);
+                Location location = player.getLocation();
+                double y = location.getWorld().getHighestBlockYAt(location);
+                location.setY(y);
+                player.teleport(location);
                 //suffocators.remove(uuid);
             }
         }

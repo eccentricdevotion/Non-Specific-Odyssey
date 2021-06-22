@@ -57,25 +57,25 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                 Location random;
                 if (args.length == 0) {
                     switch (pworld.getEnvironment()) {
-                        case NETHER:
+                        case NETHER -> {
                             if (plugin.getConfig().getBoolean("nether") && player.hasPermission("nonspecificodyssey.nether")) {
                                 random = randomNetherLocation(pworld);
                             } else {
                                 player.sendMessage("[" + plugin.getPluginName() + "] " + "You cannot random teleport in the Nether");
                                 return true;
                             }
-                            break;
-                        case THE_END:
+                        }
+                        case THE_END -> {
                             if (plugin.getConfig().getBoolean("end") && player.hasPermission("nonspecificodyssey.end")) {
                                 random = randomTheEndLocation(pworld);
                             } else {
                                 player.sendMessage("[" + plugin.getPluginName() + "] " + "You cannot random teleport in The End");
                                 return true;
                             }
-                            break;
-                        default:
+                        }
+                        default -> {
                             random = randomOverworldLocation(pworld);
-                            break;
+                        }
                     }
                     // teleport within this world only
                     sender.sendMessage("[" + plugin.getPluginName() + "] " + "Teleporting...");
@@ -97,25 +97,25 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                         return true;
                     }
                     switch (world.getEnvironment()) {
-                        case NETHER:
+                        case NETHER -> {
                             if (plugin.getConfig().getBoolean("nether") && player.hasPermission("nonspecificodyssey.nether")) {
                                 random = randomNetherLocation(world);
                             } else {
                                 player.sendMessage("[" + plugin.getPluginName() + "] " + "You cannot random teleport to the Nether");
                                 return true;
                             }
-                            break;
-                        case THE_END:
+                        }
+                        case THE_END -> {
                             if (plugin.getConfig().getBoolean("end") && player.hasPermission("nonspecificodyssey.end")) {
                                 random = randomTheEndLocation(world);
                             } else {
                                 player.sendMessage("[" + plugin.getPluginName() + "] " + "You cannot random teleport to The End");
                                 return true;
                             }
-                            break;
-                        default:
+                        }
+                        default -> {
                             random = randomOverworldLocation(world);
-                            break;
+                        }
                     }
                     sender.sendMessage("[" + plugin.getPluginName() + "] " + "Teleporting to " + world.getName() + "...");
                     movePlayer(player, random, world);
@@ -353,7 +353,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
         Collections.shuffle(Arrays.asList(directions));
         for (int i = 0; i < 4; i++) {
             switch (directions[i]) {
-                case 0:
+                case 0 -> {
                     // east
                     startx += plugin.getConfig().getInt("initial_step");
                     for (int east = startx; east < limit; east += step) {
@@ -363,8 +363,8 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                             return new Location(w, east, w.getHighestBlockYAt(east, startz), startz);
                         }
                     }
-                    break;
-                case 1:
+                }
+                case 1 -> {
                     startz += plugin.getConfig().getInt("initial_step");
                     // south
                     for (int south = startz; south < limit; south += step) {
@@ -374,8 +374,8 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                             return new Location(w, startx, w.getHighestBlockYAt(startx, south), south);
                         }
                     }
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     // west
                     startx -= plugin.getConfig().getInt("initial_step");
                     for (int west = startx; west > -limit; west -= step) {
@@ -385,8 +385,8 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                             return new Location(w, west, w.getHighestBlockYAt(west, startz), startz);
                         }
                     }
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     startz -= plugin.getConfig().getInt("initial_step");
                     // north
                     for (int north = startz; north > -limit; north -= step) {
@@ -396,7 +396,7 @@ public class NonSpecificOdysseyCommands implements CommandExecutor {
                             return new Location(w, startx, w.getHighestBlockYAt(startx, north), north);
                         }
                     }
-                    break;
+                }
             }
         }
         return l;

@@ -10,11 +10,11 @@ import java.util.Map;
 public class NonSpecificOdysseyConfig {
 
     private final NonSpecificOdyssey plugin;
+    private final FileConfiguration config;
+    private final File configFile;
     HashMap<String, String> strOptions = new HashMap<>();
     HashMap<String, Integer> intOptions = new HashMap<>();
     HashMap<String, Boolean> boolOptions = new HashMap<>();
-    private final FileConfiguration config;
-    private final File configFile;
 
     public NonSpecificOdysseyConfig(NonSpecificOdyssey plugin) {
         this.plugin = plugin;
